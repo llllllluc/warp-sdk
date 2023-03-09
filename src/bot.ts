@@ -31,7 +31,7 @@ const options = {
   contractAddress: getContractAddress(getNetworkName(lcd.config.chainID), 'warp-controller'),
 };
 
-const sdk = new WarpSdk(wallet, options.contractAddress);
+const sdk = new WarpSdk(wallet, 'terra1wxvlkpqfekzc5macvm23cg724rxef6zdng0nl3t2ar7z3lxfyhmqf0zu55');
 
 export const tryExecute = async (
   wallet: Wallet,
@@ -129,4 +129,16 @@ const loop = async () => {
   }
 };
 
-loop();
+const test = async () => {
+  const owner = wallet.key.accAddress;
+  console.log(owner);
+  const warpAccount = await sdk.account(owner).catch((e) => {
+    throw e;
+  });
+  console.log(warpAccount);
+  const amount = 1_000_000;
+  // sdk.depositLunaToWarpAccount(owner, warpAccount.account, amount.toString()).then(r => console.log(r)).catch(e => { throw e })
+  sdk.withdrawLunaFromWarpAccount(owner, owner, amount);
+};
+// loop();
+test();
