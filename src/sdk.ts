@@ -260,7 +260,7 @@ export class WarpSdk {
   public async fundWarpAccountWithLuna(owner: string, amount: warp_controller.Uint128): Promise<TxInfo> {
     const { account } = await this.account(owner);
     const txPayload = TxBuilder.new()
-      .send(this.wallet.key.accAddress, account, { [LUNA.denom]: amount })
+      .send(owner, account, { [LUNA.denom]: amount })
       .build();
 
     return this.wallet.tx(txPayload);
@@ -273,7 +273,7 @@ export class WarpSdk {
   ): Promise<TxInfo> {
     const { account } = await this.account(owner);
     const txPayload = TxBuilder.new()
-      .execute<warp_account.ExecuteMsg>(this.wallet.key.accAddress, account, {
+      .execute<warp_account.ExecuteMsg>(owner, account, {
         msgs: [
           {
             bank: {
