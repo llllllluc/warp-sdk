@@ -1,14 +1,12 @@
-import { CreateTxOptions, Key, LCDClient, TxInfo } from '@terra-money/terra.js';
+import { CreateTxOptions, LCDClient, TxInfo } from '@terra-money/terra.js';
 import { TerraEventHandler, TerraEventKind } from '../events';
 import { TerraTxError } from './utils';
 
 export abstract class Wallet {
   public lcd: LCDClient;
-  public key: Key;
 
-  constructor(lcd: LCDClient, key: Key) {
+  constructor(lcd: LCDClient) {
     this.lcd = lcd;
-    this.key = key;
   }
 
   public abstract submitTx(txOpts: CreateTxOptions, handleEvent: TerraEventHandler): Promise<string>;
