@@ -1,4 +1,4 @@
-import { warp_controller } from 'types/contracts';
+import { warp_account, warp_controller } from 'types/contracts';
 import { WalletLike, Wallet, wallet } from './wallet';
 import { Condition } from 'condition';
 import { contractQuery, LUNA } from 'utils';
