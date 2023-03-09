@@ -1,10 +1,11 @@
-import { CreateTxOptions, LCDClient } from '@terra-money/terra.js';
+import { CreateTxOptions, Key, LCDClient } from '@terra-money/terra.js';
 import { Wallet } from './base';
 import { TxResult } from './utils';
 
 export type ConnectedWalletInput = {
   wallet?: ConnectedWalletPayload;
   lcd: LCDClient;
+  key: Key;
 };
 
 export type ConnectedWalletPayload = {
@@ -16,7 +17,7 @@ export class ConnectedWallet extends Wallet {
   private wallet?: ConnectedWalletPayload;
 
   constructor(input: ConnectedWalletInput) {
-    super(input.lcd);
+    super(input.lcd, input.key);
     this.wallet = input.wallet;
   }
 

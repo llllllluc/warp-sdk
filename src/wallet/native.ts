@@ -5,7 +5,7 @@ export class NativeWallet extends Wallet {
   private wallet: TerraWallet;
 
   constructor(wallet: TerraWallet) {
-    super(wallet.lcd);
+    super(wallet.lcd, wallet.key);
     this.wallet = wallet;
   }
 
