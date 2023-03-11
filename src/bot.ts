@@ -15,6 +15,7 @@ import {
 } from '@terra-money/terra.js';
 import { WarpSdk } from './sdk';
 import { warp_controller } from 'types/contracts';
+import { CreateJobMsg } from 'job';
 
 dotenv.config();
 
@@ -138,7 +139,61 @@ const test = async () => {
   console.log(warpAccount);
   const amount = 1_000_000;
   // sdk.depositLunaToWarpAccount(owner, warpAccount.account, amount.toString()).then(r => console.log(r)).catch(e => { throw e })
-  sdk.withdrawLunaFromWarpAccount(owner, owner, amount);
+  // sdk.withdrawLunaFromWarpAccount(owner, owner, amount.toString());
+
+  const condition: warp_controller.Condition = {
+    expr: {
+      block_height: {
+        comparator: '0',
+        op: 'gt',
+      },
+    },
+  };
+  const msg = {
+    bank: {
+      send: {
+        amount: [{ denom: 'uluna', amount: '100000' }],
+        to_address: wallet.key.accAddress,
+      },
+    },
+  };
+
+  const createJobMsg1 = executeMsg<Extract<warp_controller.ExecuteMsg, { create_job }>>(
+    wallet.key.accAddress,
+    options.contractAddress,
+    {
+      create_job: {
+        condition: condition,
+        name: 'test',
+        recurring: false,
+        requeue_on_evict: false,
+        vars: [],
+        reward: '1000000',
+        msgs: [JSON.stringify(msg)],
+      },
+    }
+  );
+  // const createJobMsg: warp_controller.CreateJobMsg = executeMsg<Extract<warp_controller.ExecuteMsg, { create_job }>>(wallet.key.accAddress, options.contractAddress, {
+  //   create_job: {
+  //     condition: condition,
+  //     msgs: [],
+  //     name: 'test',
+  //     recurring: false,
+  //     requeue_on_evict: false,
+  //     reward: '1000000', // 1 LUNA
+  //     vars: [],
+  //   },
+  // });
+  const workableCreateJobMsg: CreateJobMsg = {
+    condition: condition,
+    name: 'test',
+    recurring: false,
+    requeue_on_evict: false,
+    vars: [],
+    reward: '1000000',
+    msgs: [msg],
+  };
+  sdk.createJob(owner, workableCreateJobMsg);
 };
 // loop();
 test();
